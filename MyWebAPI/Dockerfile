@@ -1,0 +1,19 @@
+FROM microsoft/dotnet:2.2-aspnetcore-runtime-stretch-slim AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM microsoft/dotnet:2.2-sdk-stretch AS build
+WORKDIR /src
+COPY ["MyWebAPI/MyWebAPI.csproj", "MyWebAPI/"]
+RUN dotnet restore "MyWebAPI/MyWebAPI.csproj"
+COPY . .
+WORKDIR "/src/MyWebAPI"
+RUN dotnet build "MyWebAPI.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "MyWebAPI.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "MyWebAPI.dll"]

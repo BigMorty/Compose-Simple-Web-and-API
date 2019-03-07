@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  myweb:
+    image: ${DOCKER_REGISTRY-}myweb
+    build:
+      context: .
+      dockerfile: MyWeb/Dockerfile
+
+  mywebapi:
+    image: ${DOCKER_REGISTRY-}mywebapi
+    build:
+      context: .
+      dockerfile: MyWebAPI/Dockerfile
+
